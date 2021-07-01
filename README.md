@@ -7,5 +7,6 @@
 + Windows C++ (Visual Studio)
 
 ## 参考资料
-[1] miloyip. "json-tutorial", zhihu, [OL]. https://zhuanlan.zhihu.com/json-tutorial
+[1] miloyip. "json-tutorial", zhihu, [OL]. https://zhuanlan.zhihu.com/json-tutorial  
+
 [2] miloyip. "json-tutorial", GitHub, [OL]. https://zhuanlan.zhihu.com/json-tutorial
