@@ -6,6 +6,9 @@
 + C++ 11 (STL)
 + Windows C++ (Visual Studio)
 
+## 类的设计
++ value
++ context
 ## 参考资料
 [1] miloyip. "json-tutorial", zhihu, [OL]. https://zhuanlan.zhihu.com/json-tutorial  
 
