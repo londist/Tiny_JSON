@@ -5,6 +5,12 @@
 ## 语言&环境
 + C++ 11 (STL)
 + Windows C++ (Visual Studio)
++ gtest 
+
+## 特性
++ 仅支持UTF-8 
++ 仅支持double的number类型
+
 
 ## 类的设计
 + value
