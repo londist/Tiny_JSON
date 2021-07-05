@@ -21,7 +21,7 @@ public:
 
 	//number
 	double get_number() const noexcept;
-	void set_number() const noexcept;
+	void set_number(double number) noexcept;
 
 	//string
 	const std::string& get_string() const noexcept; //right ref? or const ref£¿
@@ -63,10 +63,11 @@ private:
 	kType type_ = Null;
 	union 
 	{
-		double num_;
-		std::string string_;
-		std::vector<Value> array_;
-		std::unordered_map<std::string, Value> object_;
+		double number_;
+
+		std::string* string_;
+		std::vector<Value>* array_;
+		std::unordered_map<std::string, Value>* object_;
 	};
 
 };
