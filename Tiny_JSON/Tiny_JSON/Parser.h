@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Value.h"
+#include <cassert>
 
 class Parser final
 {
@@ -21,4 +22,10 @@ private:
     Value& value_;
     const char* current_; 
 };
+
+inline void expect(const char*& c, char ch)
+{
+    assert(*c == ch);
+    ++c;
+}
 

@@ -17,6 +17,7 @@
 + 类的设计
 + 自实现一个string类替换std::string
 + 使用 Google Test 完成单元测试
++ 修改number等格式匹配方法
 
 ## 类的设计
 + value
