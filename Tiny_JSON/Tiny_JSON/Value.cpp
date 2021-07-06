@@ -220,11 +220,6 @@ bool Value::operator==(const Value& value) noexcept
 	return true;
 }
 
-Value::~Value() noexcept
-{
-	this->free();
-}
-
 void Value::init(const Value& value) noexcept // move? or copy
 {
 	this->type_ = value.type_;

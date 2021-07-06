@@ -56,7 +56,7 @@ public:
 	//construct and deconstruct
 	Value() noexcept { type_ = kType::Null; };
 	Value(const Value& value) noexcept { init(value); }
-	~Value() noexcept;
+	~Value() noexcept { this->free(); };
 
 private:
 	void init(const Value& value) noexcept;
