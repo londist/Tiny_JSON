@@ -6,7 +6,7 @@
 
 #include "JsonException.h"
 
-enum kType
+enum class kType
 {
 	Null, True, False, Number, String, Array, Object
 };
@@ -54,7 +54,7 @@ public:
 	bool operator==(const Value& value) noexcept;
 
 	//construct and deconstruct
-	Value() noexcept { type_ = Null; };
+	Value() noexcept { type_ = kType::Null; };
 	Value(const Value& value) noexcept { init(value); }
 	~Value() noexcept;
 
@@ -62,7 +62,7 @@ private:
 	void init(const Value& value) noexcept;
 	void free() noexcept;
 
-	kType type_ = Null;
+	kType type_ = kType::Null;
 	union 
 	{
 		double number_;

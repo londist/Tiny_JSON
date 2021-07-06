@@ -180,22 +180,67 @@ void Value::object_remove(std::string& key) noexcept
 	this->object_->erase(key);
 }
 
+void Value::object_clear() noexcept
+{
+	assert(this->type_ == kType::Object);
+	this->object_->clear();
+}
+
+Value& Value::operator=(const Value& value) noexcept
+{
+	this->free();
+	this->init(value);
+	return (*this);
+}
+
+bool Value::operator!=(const Value& value) noexcept
+{
+	return !((*this) == value);
+}
+
+bool Value::operator==(const Value& value) noexcept
+{
+	if (this->type_ != value.type_)
+	{
+		return false;
+	}
+	switch (value.type_)
+	{
+	case kType::Number:
+		return this->number_ == value.number_; //double number? it is ok?
+	case kType::String:
+		return this->string_ == value.string_;
+	case kType::Array:
+		return this->array_ == value.array_;
+	case kType::Object:
+		return this->object_ == value.object_;
+	default:
+		break;
+	}
+	return true;
+}
+
+Value::~Value() noexcept
+{
+	this->free();
+}
+
 void Value::init(const Value& value) noexcept // move? or copy
 {
 	this->type_ = value.type_;
 	this->number_ = 0;
 	switch (this->type_)
 	{
-	case Number:
+	case kType::Number:
 		this->number_ = value.number_;
 		break;
-	case String://copy on write
+	case kType::String://copy on write
 		this->string_ = new std::string(*value.string_);
 		break;
-	case Array:
+	case kType::Array:
 		this->array_ = new std::vector<Value>(*value.array_);
 		break;
-	case Object:
+	case kType::Object:
 		this->object_ = new std::unordered_map<std::string, Value>(*value.object_);
 		break;
 	default:
@@ -208,13 +253,13 @@ void Value::free() noexcept
 	//used to free the space of union
 	switch (this->type_)
 	{
-	case String:
+	case kType::String:
 		delete this->string_;
 		break;
-	case Array:
+	case kType::Array:
 		delete this->array_;
 		break;
-	case Object:
+	case kType::Object:
 		delete this->object_;
 		break;
 	default:
