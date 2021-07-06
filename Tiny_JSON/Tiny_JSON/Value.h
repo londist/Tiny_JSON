@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "JsonException.h"
+
 enum kType
 {
 	Null, True, False, Number, String, Array, Object
