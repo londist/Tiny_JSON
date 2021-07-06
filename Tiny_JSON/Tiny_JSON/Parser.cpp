@@ -113,6 +113,67 @@ void Parser::parse_string()
 
 void Parser::parse_string_raw(std::string& string)
 {
+	//for json presenting formate is string, so the " is convert sematic
 	expect(this->current_, '\"');
 	const char* p = this->current_;
+	unsigned unicode = 0, unicode1 = 0;
+
+	while (*p != '\"')
+	{
+		if (*p == '\0') throw(JsonException("parse miss quotation mark. "));
+		
+		if (*p == '\\' && *++p)
+		{
+			switch (*p++)
+			{
+			case '\"':
+				string += '\"';
+				break;
+			case '\\':
+				string += '\\';
+				break;
+			case 't':
+				string += '\t';
+				break;
+			case 'b':
+				string += '\b';
+				break;
+			case 'f':
+				string += '\f';
+				break;
+			case 'n':
+				string += '\n';
+				break;
+			case 'r':
+				string += '\r';
+				break;
+			case 'u':
+				parse_hex4(p, unicode);
+				if (unicode >= 0xD800 && unicode <= 0xDBFF)
+				{
+					if (*p++ != '\\')
+						throw(JsonException("parse invalid unicode surrogate. "));
+					if (*p++ != 'u')
+						throw(JsonException("parse invalid unicode surrogate. "));
+					parse_hex4(p, unicode1);
+
+					if (unicode1 < 0xDC00 || unicode1 > 0xDFFF)
+						throw(JsonException("parse invalid unicode surrogate. "));
+
+					unicode = (((unicode - 0xD800) << 10) | (unicode1 - 0xDC00)) + 0x10000;
+				}
+				parse_encode_utf8(string, unicode);
+				break;
+			default:
+				throw(JsonException("parse invalid string escape. "));
+			}
+		}
+		else if ((unsigned char)*p < 0x20)
+			throw(JsonException("parse invalid string char. "));
+		else
+			string += *p++;
+	}
+
+	this->current_ = ++p;
+
 }
