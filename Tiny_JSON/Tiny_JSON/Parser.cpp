@@ -113,6 +113,7 @@ void Parser::parse_string()
 
 void Parser::parse_string_raw(std::string& string)
 {
+	//for json presenting formate is string, so the " is convert sematic
 	expect(this->current_, '\"');
 	const char* p = this->current_;
 }
