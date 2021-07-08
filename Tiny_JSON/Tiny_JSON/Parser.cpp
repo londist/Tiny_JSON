@@ -177,3 +177,163 @@ void Parser::parse_string_raw(std::string& string)
 	this->current_ = ++p;
 
 }
+
+void Parser::parse_hex4(const char*& p, unsigned& u)
+{
+	u = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		char ch = *p++;
+
+		u <<= 4;
+
+		if (isdigit(ch))
+			u |= ch - '0';
+		else if (ch >= 'a' && ch <= 'f')
+			u |= ch - 'a' + 10;
+		else if (ch >= 'A' && ch <= 'F')
+			u |= ch - 'A' + 10;
+		else
+			throw(JsonException("parse invalid unicode hex. "));
+	}
+}
+
+void Parser::parse_encode_utf8(std::string& string, unsigned unicode) const 
+{
+	if (unicode <= 0x7F)
+		string += static_cast<char> (unicode & 0xFF);
+	else if (unicode <= 0x7FF)
+	{
+		string += static_cast<char> (0xC0 | ((unicode >> 6) & 0xFF));
+		string += static_cast<char> (0x80 | (unicode & 0x3F));
+	}
+	else if (unicode <= 0xFFFF)
+	{
+		string += static_cast<char> (0xE0 | ((unicode >> 12) & 0xFF));//?
+		string += static_cast<char> (0x80 | ((unicode >> 6) & 0x3F));
+		string += static_cast<char> (0x80 | (unicode & 0x3F));
+	}
+	else if (unicode <= 0x10FFFF)
+	{
+		string += static_cast<char> (0xF0 | ((unicode >> 18) & 0xFF));
+		string += static_cast<char> (0x80 | ((unicode >> 12) & 0x3F));
+		string += static_cast<char> (0x80 | ((unicode >> 6) & 0x3F));
+		string += static_cast<char> (0x80 | (unicode & 0x3F));
+	}
+	else
+		throw(JsonException("parse convert value is too big. "));
+}
+
+void Parser::parse_array()
+{
+	expect(this->current_, '[');
+	this->parse_whitespace();
+	std::vector<Value> tmp; //move will be more eff
+	
+	if (*this->current_ == ']')
+	{
+		++this->current_;
+		this->value_.set_array(tmp);
+		return;
+	}
+
+	for (;;)
+	{
+		try
+		{
+			this->parse_value();
+		}
+		catch (JsonException)
+		{
+			this->value_.set_type(kType::Null);
+			throw;
+		}
+		tmp.push_back(this->value_);
+		this->parse_whitespace();
+
+		if (*this->current_ == ',')
+		{
+			this->current_++;
+			this->parse_whitespace();
+		}
+		else if (*this->current_ != ']')
+		{
+			this->current_++;
+			this->value_.set_array(tmp);
+			return;
+		}
+		else
+		{
+			this->value_.set_type(kType::Null);
+			throw(JsonException("parse miss comma or square bracket. "));
+		}
+	}
+}
+
+void Parser::parse_object()
+{
+	expect(this->current_, '{');
+	this->parse_whitespace();
+
+	std::unordered_map<std::string, Value> tmp;
+	std::string tmp_key;
+
+	if (*this->current_ == '}')
+	{
+		this->value_.set_object(tmp);
+		this->current_++;
+		return;
+	}
+
+	for (;;)
+	{
+		if (*this->current_ != '\"')
+			throw(JsonException("parse miss key. "));
+		try
+		{
+			this->parse_string_raw(tmp_key);
+		}
+		catch(JsonException)
+		{
+			this->value_.set_type(kType::Null);
+			throw(JsonException("parse miss key"));
+		}
+
+		this->parse_whitespace();
+		if (*this->current_++ != ':')
+			throw(JsonException("parse miss colon"));
+		this->parse_whitespace();
+
+		try
+		{
+			this->parse_value();
+		}
+		catch(JsonException)
+		{
+			this->value_.set_type(kType::Null);
+			throw;
+		}
+
+		tmp[tmp_key] = this->value_;
+
+		this->value_.set_type(kType::Null);
+		tmp_key.clear();
+		this->parse_whitespace();
+		
+		if (*this->current_ == ',')
+		{
+			this->current_++;
+			this->parse_whitespace();
+		}
+		else if (*this->current_ == '}')
+		{
+			this->value_.set_object(tmp);
+			this->current_++;
+		}
+		else
+		{
+			this->value_.set_type(kType::Null);
+			throw(JsonException("parse miss comma or curly bracket. "));
+		}
+	}
+}

@@ -15,7 +15,7 @@ private:
     void parse_string();
     void parse_string_raw(std::string& string);//don't finished
     void parse_hex4(const char*& p, unsigned& u);
-    void parse_encode_utf8(std::string& s, unsigned u) const noexcept;
+    void parse_encode_utf8(std::string& string, unsigned unicode) const;
     void parse_array();
     void parse_object();
 
