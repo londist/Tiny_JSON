@@ -7,7 +7,6 @@
 ## 语言&环境
 + C++ 11 (STL)
 + Windows C++ (Visual Studio)
-+ gtest 
 
 ## 特性
 + 仅支持UTF-8 
