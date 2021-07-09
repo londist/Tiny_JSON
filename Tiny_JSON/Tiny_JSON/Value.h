@@ -40,6 +40,7 @@ public:
 	void array_clear() noexcept;
 
 	//object
+	std::unordered_map<std::string, Value>& get_object() const;
 	const std::string& get_object_key(const Value& value) const noexcept;
 	size_t get_object_key_length(const Value& value) const noexcept;
 	const Value& get_object_value(const std::string& key) const noexcept;

@@ -139,11 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Generator.h" />
     <ClInclude Include="JsonException.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Value.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Generator.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Value.cpp" />
   </ItemGroup>

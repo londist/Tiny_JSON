@@ -121,6 +121,10 @@ void Value::array_clear() noexcept
 	assert(this->type_ == kType::Array);
 	this->array_->clear();
 }
+std::unordered_map<std::string, Value>& Value::get_object() const
+{
+	return *this->object_;
+}
 
 const std::string& Value::get_object_key(const Value& value) const //
 {
