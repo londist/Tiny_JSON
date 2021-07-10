@@ -49,8 +49,6 @@ void Generator::stringify_value(const Value& value)
 		}
 		json_ += '}';
 		break;
-	default:
-		break;
 	}
 }
 

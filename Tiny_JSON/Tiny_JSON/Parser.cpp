@@ -57,7 +57,7 @@ void Parser::parse_literal(const char* literal, kType t)
 	size_t i = 1;
 	for (;literal[i] != '\0'; i++)
 	{
-		if (this->current_[i] != literal[i])
+		if (this->current_[i-1] != literal[i])
 		{
 			throw(JsonException("parse invalid value"));
 		}
@@ -256,7 +256,7 @@ void Parser::parse_array()
 			this->current_++;
 			this->parse_whitespace();
 		}
-		else if (*this->current_ != ']')
+		else if (*this->current_ == ']')
 		{
 			this->current_++;
 			this->value_.set_array(tmp);
@@ -329,6 +329,7 @@ void Parser::parse_object()
 		{
 			this->value_.set_object(tmp);
 			this->current_++;
+			return;
 		}
 		else
 		{

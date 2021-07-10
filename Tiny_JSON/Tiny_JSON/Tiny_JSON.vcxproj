@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="Test.cpp" />
     <ClCompile Include="Value.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
