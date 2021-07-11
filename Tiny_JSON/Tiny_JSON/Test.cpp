@@ -217,7 +217,88 @@ TEST(TestAccess, HandlesNull)
 	EXPECT_EQ(kType::False, v.get_type());
 }
 
+TEST(TestAccess, HandlesTrue)
+{
+	Value v;
+	v.set_string("a");
+	v.set_type(kType::True);
+	EXPECT_EQ(kType::True, v.get_type());
+}
 
+TEST(TestAccess, HandlesNumber)
+{
+	Value v;
+	v.set_string("a");
+	v.set_number(1234.5);
+	EXPECT_DOUBLE_EQ(1234.5, v.get_number());
+}
+
+TEST(TestAccess, HandlesString)
+{
+	Value v;
+	v.set_string("");
+	EXPECT_STREQ("", v.get_string().c_str());
+	v.set_string("Hello");
+	EXPECT_STREQ("Hello", v.get_string().c_str());
+}
+
+TEST(TestAccess, HandlesArray)
+{
+	Value a, e;
+	std::vector<Value> v;
+	for (size_t j = 0; j < 5; j += 5) {
+		a.set_array(v);
+		EXPECT_EQ(0, a.get_array_size());
+		for (int i = 0; i < 10; ++i) {
+			e.set_number(i);
+			a.array_push_back(e);
+		}
+
+		EXPECT_EQ(10, a.get_array_size());
+		for (int i = 0; i < 10; ++i)
+			EXPECT_EQ(static_cast<double>(i), a.get_array_element(i).get_number());
+	}
+	a.array_pop_back();
+	EXPECT_EQ(9, a.get_array_size());
+	for (int i = 0; i < 9; ++i)
+		EXPECT_EQ(static_cast<double>(i), a.get_array_element(i).get_number());
+
+	a.array_erase(4, 0);
+	EXPECT_EQ(9, a.get_array_size());
+	for (int i = 0; i < 9; ++i)
+		EXPECT_EQ(static_cast<double>(i), a.get_array_element(i).get_number());
+
+	a.array_erase(8, 1);
+	EXPECT_EQ(8, a.get_array_size());
+	for (int i = 0; i < 8; ++i)
+		EXPECT_EQ(static_cast<double>(i), a.get_array_element(i).get_number());
+
+	a.array_erase(0, 2);
+	EXPECT_EQ(6, a.get_array_size());
+	for (int i = 0; i < 6; ++i)
+		EXPECT_EQ(static_cast<double>(i) + 2, a.get_array_element(i).get_number());
+
+	for (int i = 0; i < 2; ++i) {
+		e.set_number(i);
+		a.array_insert(e, i);
+	}
+
+	EXPECT_EQ(8, a.get_array_size());
+	for (int i = 0; i < 8; ++i) {
+		EXPECT_EQ(static_cast<double>(i), a.get_array_element(i).get_number());
+	}
+
+	e.set_string("Hello");
+	a.array_push_back(e);
+
+	a.array_clear();
+	EXPECT_EQ(0, a.get_array_size());
+}
+
+TEST(TestAccess, HandlesArray)
+{
+
+}
 
 int main(int argc, char** argv)
 {
