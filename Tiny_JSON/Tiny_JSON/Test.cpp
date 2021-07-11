@@ -295,7 +295,7 @@ TEST(TestAccess, HandlesArray)
 	EXPECT_EQ(0, a.get_array_size());
 }
 
-TEST(TestAccess, HandlesArray)
+TEST(TestAccess, HandlesObject)
 {
 
 }
