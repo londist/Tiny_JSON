@@ -1,10 +1,10 @@
 #include "Generator.h"
 
-Generator::Generator(const Value& value, std::string& json_string)
-	:json_(json_)
+Generator::Generator(const Value& value, std::string& json)
+	:json_(json)
 {
 	json_.clear();
-	stringify_value(value);
+	this->stringify_value(value);
 }
 
 void Generator::stringify_value(const Value& value) 
@@ -21,7 +21,12 @@ void Generator::stringify_value(const Value& value)
 		this->json_ += "false";
 		break;
 	case kType::Number:
-		this->json_ += std::to_string(value.get_number());
+	{
+		char buffer[32] = { 0 };
+		sprintf(buffer, "%.17g", value.get_number());
+		this->json_ += buffer;
+	}
+		//this->json_ += std::to_string(value.get_number());
 		break;
 	case kType::String:
 		stringify_string(value.get_string());

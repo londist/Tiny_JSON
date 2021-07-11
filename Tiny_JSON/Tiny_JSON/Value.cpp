@@ -1,5 +1,6 @@
 #include "Value.h"
 #include "Parser.h"
+#include "Generator.h"
 #include <cassert>
 
 void Value::parse(const std::string& content)
@@ -9,10 +10,7 @@ void Value::parse(const std::string& content)
 
 void Value::stringify(std::string& content) const noexcept
 {
-	if (this->type_ == kType::String && *this->string_ != content)
-	{
-		content = *string_;
-	}
+		Generator(*this, content);
 }
 
 kType Value::get_type() const noexcept
